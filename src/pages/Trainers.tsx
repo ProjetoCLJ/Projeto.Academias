@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Star, MapPin, Calendar, DollarSign, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import MapView from "@/components/MapView";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SchedulePreview } from "@/components/SchedulePreview";
 
@@ -31,10 +32,12 @@ const Trainers = () => {
       photo: "",
       rating: 4.8,
       reviews: 124,
+      coords: [-23.5629, -46.6544],
       price: 150,
       experience: 8,
       specialties: ["Musculação", "Hipertrofia"],
-      location: "São Paulo - Zona Sul",
+      location: "Academia Gaviões - João Moura",
+      address: "Rua João Moura, 375",
       available: true,
       schedule: [
         { start: "08:00", end: "09:00", available: true },
@@ -51,10 +54,12 @@ const Trainers = () => {
       photo: "",
       rating: 4.9,
       reviews: 98,
+      coords: [-23.5710, -46.6470],
       price: 180,
       experience: 10,
       specialties: ["Yoga", "Pilates"],
-      location: "São Paulo - Zona Oeste",
+      location: "CEPE - Cidade Universitária",
+      address: "Av. Prof. Luciano Gualberto, 380",
       available: true,
       schedule: [
         { start: "07:00", end: "08:00", available: true },
@@ -69,6 +74,7 @@ const Trainers = () => {
       photo: "",
       rating: 4.7,
       reviews: 156,
+      coords: [-23.5580, -46.6330],
       price: 140,
       experience: 6,
       specialties: ["CrossFit", "Funcional"],
@@ -184,30 +190,16 @@ const Trainers = () => {
           {/* Map */}
           <div className="lg:col-span-5">
             <Card className="h-[600px] sticky top-24 overflow-hidden">
-              <div className="relative w-full h-full bg-gradient-to-br from-primary/5 via-background to-accent/5">
-                {/* Mock Map Grid */}
-                <div className="absolute inset-0 grid grid-cols-8 grid-rows-8 opacity-10">
-                  {Array.from({ length: 64 }).map((_, i) => (
-                    <div key={i} className="border border-muted" />
-                  ))}
-                </div>
-                
-                {/* Mock Map Markers */}
-                <div className="absolute top-1/4 left-1/3 w-8 h-8 bg-primary rounded-full animate-pulse shadow-lg flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div className="absolute top-1/2 left-1/2 w-8 h-8 bg-primary rounded-full animate-pulse shadow-lg flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div className="absolute top-2/3 left-2/3 w-8 h-8 bg-primary rounded-full animate-pulse shadow-lg flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-primary-foreground" />
-                </div>
-                
-                {/* Map Label */}
-                <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md">
-                  <p className="text-sm font-medium">{city || "São Paulo"}</p>
-                  <p className="text-xs text-muted-foreground">Mapa interativo (em breve)</p>
-                </div>
+              <div className="w-full h-full">
+                <MapView
+                  center={[trainers[0].coords[0], trainers[0].coords[1]]}
+                  zoom={12}
+                  markers={trainers.map((t) => ({
+                    ...(t.address ? {} : { position: [t.coords[0], t.coords[1]] as [number, number] }),
+                    label: t.name,
+                    address: t.address,
+                  }))}
+                />
               </div>
             </Card>
           </div>
